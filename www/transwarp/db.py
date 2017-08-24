@@ -21,7 +21,7 @@ class Dict(dict):
         try:
             return self[key]
         except KeyError:
-            raise AttributeError("'Dict' object has no attribute '%s'" % key)
+            raise AttributeError(r"'Dict' object has no attribute '%s'" % key)
 
     def __setattr__(self, key, value):
         self[key] = value
@@ -232,7 +232,8 @@ def _select(sql, first, *args):
     logging.info('SQL:%s, ARGS:%s' % (sql, args))
     try:
         cursor = _db_ctx.cursor()
-        cursor.execute(sql, *args)
+        # execute第二个参数需要是元组，所以args前面的*去掉了，这里要特别注意
+        cursor.execute(sql, args)
         if cursor.description:
             names = [x[0] for x in cursor.description]
             if first:
@@ -268,7 +269,8 @@ def _update(sql, *args):
     logging.info('SQL: %s, ARGS: %s' % (sql, args))
     try:
         cursor = _db_ctx.cursor()
-        cursor.execute(sql, *args)
+        #execute第二个参数需要是元组，所以args前面的*去掉了，这里要特别注意
+        cursor.execute(sql, args)
         r = cursor.rowcount
         if _db_ctx.transactions == 0:
             #update之后，自动提交
@@ -284,7 +286,8 @@ def update(sql, *args):
 
 def insert(table, **kw):
     cols, args = zip(*kw.iteritems())
-    sql = 'insert into %s(%s) values(%s)' % table, ','.join(['%s' % col for col in cols]), ','.join(['?' for i in range(len(cols))])
+    #格式化字符串，如果有多个参数，用括号括起来，否则可能会有问题
+    sql = 'insert into %s(%s) values(%s)' % (table, ','.join(['%s' % col for col in cols]), ','.join(['?' for i in range(len(cols))]))
     return _update(sql, *args)
 
 if __name__ == '__main__':
@@ -292,6 +295,7 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     create_engine('root', 'qian1205', 'test')
     update('drop table if exists user')
-    update('create table user (id int primary key, name text, email text, passwd text, last_modified real)')
+    update('create table user (id int primary key, name text)')
+    insert('user',id=1, name='qian')
     import doctest
     doctest.testmod()
