@@ -16,7 +16,7 @@ def _gen_sql(table_name, mappings):
         if f.primary_key:
             pk = f.name
 
-        sql.append(' %s %s,' % (f.name, ddl) if nullable else ' %s, %s not null,' % (f.name, ddl))
+        sql.append(' %s %s,' % (f.name, ddl) if nullable else ' %s %s not null,' % (f.name, ddl))
     sql.append(' primary key(%s)' % pk)
     sql.append(');')
     return '\n'.join(sql)
