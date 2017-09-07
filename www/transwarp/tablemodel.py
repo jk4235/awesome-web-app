@@ -1,3 +1,5 @@
+# -*- coding:utf-8 -*-
+
 import time
 from db import next_id
 from orm import Model, StringField, FloatField, BooleanField, TextField
