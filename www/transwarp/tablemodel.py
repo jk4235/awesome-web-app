@@ -45,8 +45,8 @@ class Comment(Model):
 if __name__ == '__main__':
     import db
     db.create_engine('root', 'qian1205', 'test')
-    db.update('drop table if exists user')
-    u = User(name='Test', email='test@example.com', password='1234567890', image='about:blank')
-    db.update(u.__sql__())
-    u.insert()
-    print 'new user id', u.id
+    b = Blog(user_id='001503654986581befb8575ffa14410a5e966e63489bf94000', user_name='Test', user_image='about:blank', name='Test Text', summary='a short text', content='It is a short test text')
+    # u = User(name='Test', email='test@example.com', password='1234567890', image='about:blank')
+    db.update(b.__sql__())
+    b.insert()
+    print 'new blog name', b.name

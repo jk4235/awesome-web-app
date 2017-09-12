@@ -1,4 +1,4 @@
-# -*- coding:utf-8 -*-
+﻿# -*- coding:utf-8 -*-
 import types, os, re, cgi, sys, datetime, functools, mimetypes, threading, logging, traceback, urllib
 from db import Dict
 
@@ -421,7 +421,6 @@ class Request(object):
 
     @property
     def path_info(self):
-        print self._environ.get('PATH_INFO', '')
         return urllib.unquote(self._environ.get('PATH_INFO', ''))
 
     @property
@@ -753,13 +752,12 @@ class WSGIApplication(object):
             path_info = ctx.request.path_info
             if request_method == 'GET':
                 fn = self._get_static.get(path_info, None)
-                print fn
                 if fn:
                     return fn()
                 for fn in self._get_dynamic:
                     args = fn.match(path_info)
                     if args:
-                        return fn(*args)
+                        return fn(args)
                 raise notfound()
             if request_method == 'POST':
                 fn = self._post_static.get(path_info, None)

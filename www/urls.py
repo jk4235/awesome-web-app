@@ -1,10 +1,11 @@
-# -*- coding:utf-8 -*-
+﻿# -*- coding:utf-8 -*-
 from transwarp.web import get, view
-from transwarp.tablemodel import User
+from transwarp.tablemodel import User, Blog, Comment
 
 
-@view('test.html')
+@view('blogs.html')
 @get('/')
-def test_users():
-    users = User.find_all()
-    return dict(users=users)
+def index():
+    blogs = Blog.find_all()
+    users = User.find_first('where email=?', 'test@example.com')
+    return dict(blogs=blogs, users=users)
